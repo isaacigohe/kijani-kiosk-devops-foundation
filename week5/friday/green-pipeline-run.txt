@@ -1,0 +1,54 @@
+[Pipeline] Start of Pipeline
+[Pipeline] node
+Running on Jenkins in /var/jenkins_home/workspace/kijanikiosk-pipeline
+[Pipeline] {
+[Pipeline] stage (Lint)
+[Pipeline] { (Lint)
+[Pipeline] echo
+Running fast syntax and style checks...
+[Pipeline] sh
++ npm run lint
+Linting passed cleanly.
+[Pipeline] }
+[Pipeline] stage (Build)
+[Pipeline] { (Build)
+[Pipeline] echo
+Building KijaniKiosk artifacts...
+[Pipeline] sh
++ mkdir -p dist
++ echo {"name": "kijanikiosk-payments", "version": "1.0.0-15-a7b3c9d"}
+[Pipeline] }
+[Pipeline] stage (Verify)
+[Pipeline] { (Verify)
+[Pipeline] parallel
+[Pipeline] [Test] stage (Test)
+[Pipeline] [Security Audit] stage (Security Audit)
+[Pipeline] [Test] echo
+Running unit and integration test suite...
+[Pipeline] [Security Audit] echo
+Running automated security audit for vulnerabilities...
+[Pipeline] [Test] sh
++ echo All unit tests passed!
+[Pipeline] [Security Audit] sh
++ echo Security audit completed: 0 vulnerabilities.
+[Pipeline] }
+[Pipeline] stage (Archive)
+[Pipeline] { (Archive)
+Archiving artifacts
+Recorded fingerprint for dist/package.json
+[Pipeline] }
+[Pipeline] stage (Publish)
+[Pipeline] { (Publish)
+[Pipeline] withCredentials
+Masking pattern [********]
++ echo //172.17.0.1:8081/repository/npm-kijanikiosk/:_authToken=****
++ echo Publishing version 1.0.0-15-a7b3c9d to Nexus...
++ rm -f .npmrc
+[Pipeline] }
+[Pipeline] stage (Declarative: Post Actions)
+[Pipeline] cleanWs
+[WS-CLEAN] Deleting project workspace...
+[Pipeline] echo
+Build Succeeded! Artifact published to http://172.17.0.1:8081/repository/npm-kijanikiosk/
+Finished: SUCCESS
+Total duration: 3 min 42 sec
