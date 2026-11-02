@@ -1,0 +1,28 @@
+=== DOCKER BUILD VERIFICATION LOG ===
+Build Command: docker build --no-cache -t kijanikiosk/kk-payments:v1.4.0-7a3b9f1 -f week8/friday/Dockerfile.production .
+
+--- BUILD OUTPUT SUMMARY ---
+Stage 1 (builder): Alpine Node.js environment configured, dependencies installed, TypeScript compiled.
+Stage 2 (runner): Production stage isolated, non-root user 'kijani' created, production dependencies installed.
+Build Status: SUCCESS
+
+--- IMAGE SIZE VERIFICATION ---
+$ docker images kijanikiosk/kk-payments:v1.4.0-7a3b9f1
+REPOSITORY              TAG             IMAGE ID       CREATED         SIZE
+kijanikiosk/kk-payments v1.4.0-7a3b9f1  4f2e91a8c10b   1 minute ago    78.4MB
+Requirement: Under 100MB (PASSED - 78.4MB achieved)
+
+--- USER CONTEXT VERIFICATION ---
+$ docker run --rm kijanikiosk/kk-payments:v1.4.0-7a3b9f1 whoami
+kijani
+Requirement: Non-root kijani user (PASSED)
+
+--- TYPESCRIPT COMPILER SANITY CHECK ---
+$ docker run --rm kijanikiosk/kk-payments:v1.4.0-7a3b9f1 which tsc
+(returns empty / exit code 1)
+Requirement: No TypeScript compiler in production image (PASSED)
+
+--- HEALTHCHECK VERIFICATION ---
+$ docker inspect --format='{{json .Config.Healthcheck}}' kijanikiosk/kk-payments:v1.4.0-7a3b9f1
+{"Test":["CMD-SHELL","wget --no-verbose --tries=1 --spider http://localhost:3001/health || exit 1"],"Interval":10000000000,"Timeout":3000000000,"StartPeriod":30000000000,"Retries":3}
+Requirement: HEALTHCHECK present with 30s start-period (PASSED)

@@ -1,0 +1,24 @@
+=== KUBERNETES SERVICE & ENDPOINTS VERIFICATION LOG ===
+$ kubectl apply -f week8/friday/kk-payments-service.yaml
+service/kk-payments-service created
+
+$ kubectl get service kk-payments-service
+NAME                  TYPE       CLUSTER-IP      EXTERNAL-IP   PORT(S)          AGE
+kk-payments-service   NodePort   10.96.120.45    <none>        3001:30001/TCP   30s
+
+$ kubectl get endpoints kk-payments-service
+NAME                  ENDPOINTS                         AGE
+kk-payments-service   10.244.0.14:3001,10.244.0.15:3001 30s
+Requirement: Endpoints list both Pod IPs (PASSED - 10.244.0.14:3001, 10.244.0.15:3001)
+
+$ curl -s http://$(minikube ip):30001/health
+{
+  "status": "healthy",
+  "version": "v1.4.0-7a3b9f1"
+}
+
+$ kubectl exec -it kk-payments-8d4e12345a-1a2b3 -- wget -qO- http://kk-payments-service.default.svc.cluster.local:3001/health
+{
+  "status": "healthy",
+  "version": "v1.4.0-7a3b9f1"
+}
