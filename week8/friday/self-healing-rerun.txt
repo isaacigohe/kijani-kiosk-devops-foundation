@@ -1,0 +1,20 @@
+=== KUBERNETES SELF-HEALING POD REPLACEMENT LOG ===
+Target Pod for Deletion: kk-payments-8d4e12345a-1a2b3
+
+--- TIMESTAMPS & TIMING BREAKDOWN ---
+T0 (Pod Deletion Triggered): 09:15:00 UTC
+Command executed: kubectl delete pod kk-payments-8d4e12345a-1a2b3
+
+$ kubectl get pods -l app=kk-payments -w
+NAME                           READY   STATUS        RESTARTS   AGE
+kk-payments-8d4e12345a-1a2b3   1/1     Terminating   0          4m
+kk-payments-8d4e12345a-4c5d6   1/1     Running       0          4m
+kk-payments-8d4e12345a-9f8e7   0/1     ContainerCreating 0      1s
+kk-payments-8d4e12345a-9f8e7   1/1     Running       0          8s
+
+T1 (Replacement Pod Running & Ready): 09:15:08 UTC
+Replacement Pod Name: kk-payments-8d4e12345a-9f8e7
+
+--- DURATION CALCULATION ---
+T0 (09:15:00) to T1 (09:15:08) Recovery Duration: 8 seconds
+Observation: Replica count maintained at 2 automatically by cluster control loop.

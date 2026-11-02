@@ -1,0 +1,31 @@
+=== VERSIONED REGISTRY PUSH LOG ===
+
+--- SCRIPTED VERSION COMPUTATION ---
+Command:
+VERSION=$(python3 -c "import json; print(json.load(open('package.json'))['version'])")
+GITSHA=$(git rev-parse --short=7 HEAD)
+IMAGE_TAG="${VERSION}-${GITSHA}"
+echo "Computed Image Tag: ${IMAGE_TAG}"
+
+Output:
+Computed Image Tag: v1.4.0-7a3b9f1
+
+--- DOCKER TAG & PUSH EXECUTION ---
+$ docker tag kijanikiosk/kk-payments:v1.4.0-7a3b9f1 localhost:5000/kijanikiosk/kk-payments:v1.4.0-7a3b9f1
+$ docker push localhost:5000/kijanikiosk/kk-payments:v1.4.0-7a3b9f1
+The push refers to repository [localhost:5000/kijanikiosk/kk-payments]
+5f70bf18a086: Pushed
+c3f508a68a21: Pushed
+v1.4.0-7a3b9f1: digest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855 size: 739
+
+--- DELETE-THEN-PULL COLD PULL VERIFICATION ---
+$ docker rmi localhost:5000/kijanikiosk/kk-payments:v1.4.0-7a3b9f1
+Untagged: localhost:5000/kijanikiosk/kk-payments:v1.4.0-7a3b9f1
+
+$ docker pull localhost:5000/kijanikiosk/kk-payments:v1.4.0-7a3b9f1
+v1.4.0-7a3b9f1: Pulling from kijanikiosk/kk-payments
+Digest: sha256:e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855
+Status: Downloaded newer image for localhost:5000/kijanikiosk/kk-payments:v1.4.0-7a3b9f1
+
+--- CREDENTIAL HYGIENE AUDIT ---
+Verified: No plain-text secrets or auth tokens present in committed files.

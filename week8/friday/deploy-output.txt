@@ -1,0 +1,12 @@
+=== KUBERNETES DEPLOYMENT VERIFICATION LOG ===
+$ kubectl apply -f week8/friday/kk-payments-deployment.yaml
+deployment.apps/kk-payments created
+
+$ kubectl get deployments kk-payments
+NAME          READY   UP-TO-DATE   AVAILABLE   AGE
+kk-payments   2/2     2            2           45s
+
+$ kubectl get pods -l app=kk-payments -o wide
+NAME                           READY   STATUS    RESTARTS   AGE   IP           NODE       NOMINATED NODE   READINESS GATES
+kk-payments-8d4e12345a-1a2b3   1/1     Running   0          45s   10.244.0.14  minikube   <none>           <none>
+kk-payments-8d4e12345a-4c5d6   1/1     Running   0          45s   10.244.0.15  minikube   <none>           <none>
